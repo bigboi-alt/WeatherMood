@@ -8,7 +8,7 @@ class WeatherManager {
         
         // OpenWeatherMap API - Free tier
         // Users can get their own key at https://openweathermap.org/api
-        this.apiKey = localStorage.getItem('weathermood_apikey') || '';
+        this.apiKey = localStorage.getItem('weathermood_apikey') || '0d7521355dc73abcf8465cd02b651791';
         this.baseUrl = 'https://api.openweathermap.org/data/2.5';
         this.geoUrl = 'https://api.openweathermap.org/geo/1.0';
 
