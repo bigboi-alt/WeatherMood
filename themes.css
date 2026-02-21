@@ -106,3 +106,66 @@
         color 0.3s ease,
         box-shadow 0.3s ease;
 }
+
+/* ===== THEME-SPECIFIC OVERRIDES ===== */
+
+/* Sunny theme - warm glows */
+[data-theme="sunny"] .weather-hero {
+    background: linear-gradient(135deg, 
+        rgba(245, 158, 11, 0.1) 0%, 
+        rgba(249, 115, 22, 0.05) 100%
+    );
+}
+
+/* Cloudy theme - soft blues */
+[data-theme="cloudy"] .weather-hero {
+    background: linear-gradient(135deg, 
+        rgba(96, 165, 250, 0.1) 0%, 
+        rgba(129, 140, 248, 0.05) 100%
+    );
+}
+
+/* Rainy theme - deep purples */
+[data-theme="rainy"] .weather-hero {
+    background: linear-gradient(135deg, 
+        rgba(99, 102, 241, 0.1) 0%, 
+        rgba(139, 92, 246, 0.05) 100%
+    );
+}
+
+/* Stormy theme - dramatic darks */
+[data-theme="stormy"] .weather-hero {
+    background: linear-gradient(135deg, 
+        rgba(168, 85, 247, 0.1) 0%, 
+        rgba(236, 72, 153, 0.05) 100%
+    );
+}
+
+/* Snowy theme - cool cyans */
+[data-theme="snowy"] .weather-hero {
+    background: linear-gradient(135deg, 
+        rgba(56, 189, 248, 0.1) 0%, 
+        rgba(34, 211, 238, 0.05) 100%
+    );
+}
+
+/* ===== CUSTOM SCROLLBAR PER THEME ===== */
+[data-theme="sunny"] ::-webkit-scrollbar-thumb {
+    background: rgba(245, 158, 11, 0.3);
+}
+
+[data-theme="cloudy"] ::-webkit-scrollbar-thumb {
+    background: rgba(96, 165, 250, 0.3);
+}
+
+[data-theme="rainy"] ::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.3);
+}
+
+[data-theme="stormy"] ::-webkit-scrollbar-thumb {
+    background: rgba(168, 85, 247, 0.3);
+}
+
+[data-theme="snowy"] ::-webkit-scrollbar-thumb {
+    background: rgba(56, 189, 248, 0.3);
+}

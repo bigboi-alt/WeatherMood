@@ -19,10 +19,56 @@
             <div class="loader-ring">
                 <div class="loader-ring-inner"></div>
             </div>
-            <p class="loader-text">Reading the skies...</p>
-            <div class="loader-bar">
-                <div class="loader-bar-fill"></div>
+            <p class="loader-text" id="loaderText">Initializing...</p>
+            <div class="loader-steps" id="loaderSteps">
+                <div class="loader-step" data-step="location">
+                    <span class="step-icon">📍</span>
+                    <span class="step-text">Detecting location...</span>
+                    <span class="step-status"></span>
+                </div>
+                <div class="loader-step" data-step="weather">
+                    <span class="step-icon">🌤️</span>
+                    <span class="step-text">Fetching weather...</span>
+                    <span class="step-status"></span>
+                </div>
+                <div class="loader-step" data-step="app">
+                    <span class="step-icon">✨</span>
+                    <span class="step-text">Preparing dashboard...</span>
+                    <span class="step-status"></span>
+                </div>
             </div>
+            <div class="loader-bar">
+                <div class="loader-bar-fill" id="loaderBarFill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Location Permission Modal -->
+    <div id="locationModal" class="modal-overlay hidden">
+        <div class="modal card-glass location-modal">
+            <div class="location-modal-icon">📍</div>
+            <h2>Enable Location</h2>
+            <p class="location-modal-desc">
+                WeatherMood needs your location to provide accurate weather data and personalized activity suggestions.
+            </p>
+            <div class="location-modal-actions">
+                <button class="btn-primary" id="allowLocation">
+                    <span>📍</span> Allow Location Access
+                </button>
+                <button class="btn-secondary" id="manualLocation">
+                    <span>🔍</span> Enter Location Manually
+                </button>
+            </div>
+            <div class="location-search-container hidden" id="locationSearchContainer">
+                <div class="location-search-box">
+                    <input type="text" id="locationSearchInput" placeholder="Search city (e.g., Tokyo, London, Mumbai)..." autocomplete="off">
+                    <button class="search-btn" id="searchLocationBtn">🔍</button>
+                </div>
+                <div class="location-search-results" id="locationSearchResults"></div>
+            </div>
+            <p class="location-privacy">
+                🔒 Your location data stays on your device and is never shared.
+            </p>
         </div>
     </div>
 
@@ -55,7 +101,13 @@
                 </button>
             </div>
             <div class="nav-actions">
-                <button id="themeToggle" class="icon-btn" title="Cycle Weather Theme">
+                <button id="refreshWeather" class="icon-btn" title="Refresh Weather">
+                    <span>🔄</span>
+                </button>
+                <button id="locationBtn" class="icon-btn" title="Change Location">
+                    <span>📍</span>
+                </button>
+                <button id="themeToggle" class="icon-btn" title="Cycle Weather Theme (Demo)">
                     <span>🎨</span>
                 </button>
                 <button id="settingsBtn" class="icon-btn" title="Settings">
@@ -80,36 +132,60 @@
                                 <span>☀️</span>
                             </div>
                             <div class="weather-temp">
-                                <span class="temp-value" id="tempValue">24</span>
+                                <span class="temp-value" id="tempValue">--</span>
                                 <span class="temp-unit">°C</span>
                             </div>
                         </div>
                         <div class="weather-details">
-                            <h2 class="weather-condition" id="weatherCondition">Clear Sky</h2>
+                            <h2 class="weather-condition" id="weatherCondition">Loading...</h2>
                             <p class="weather-location" id="weatherLocation">
                                 <span class="location-pin">📍</span>
                                 <span id="locationText">Detecting location...</span>
+                                <button class="change-location-btn" id="changeLocationBtn" title="Change location">✏️</button>
                             </p>
                             <div class="weather-meta">
                                 <div class="meta-item">
                                     <span class="meta-icon">💧</span>
                                     <span class="meta-label">Humidity</span>
-                                    <span class="meta-value" id="humidity">65%</span>
+                                    <span class="meta-value" id="humidity">--%</span>
                                 </div>
                                 <div class="meta-item">
                                     <span class="meta-icon">💨</span>
                                     <span class="meta-label">Wind</span>
-                                    <span class="meta-value" id="windSpeed">12 km/h</span>
+                                    <span class="meta-value" id="windSpeed">-- km/h</span>
                                 </div>
                                 <div class="meta-item">
                                     <span class="meta-icon">👁</span>
                                     <span class="meta-label">Visibility</span>
-                                    <span class="meta-value" id="visibility">10 km</span>
+                                    <span class="meta-value" id="visibility">-- km</span>
                                 </div>
                                 <div class="meta-item">
                                     <span class="meta-icon">🌡</span>
                                     <span class="meta-label">Feels Like</span>
-                                    <span class="meta-value" id="feelsLike">22°C</span>
+                                    <span class="meta-value" id="feelsLike">--°C</span>
+                                </div>
+                            </div>
+                            <!-- Additional weather info -->
+                            <div class="weather-extra">
+                                <div class="extra-item">
+                                    <span class="extra-icon">🌅</span>
+                                    <span class="extra-label">Sunrise</span>
+                                    <span class="extra-value" id="sunrise">--:--</span>
+                                </div>
+                                <div class="extra-item">
+                                    <span class="extra-icon">🌇</span>
+                                    <span class="extra-label">Sunset</span>
+                                    <span class="extra-value" id="sunset">--:--</span>
+                                </div>
+                                <div class="extra-item">
+                                    <span class="extra-icon">🌡️</span>
+                                    <span class="extra-label">Min/Max</span>
+                                    <span class="extra-value" id="tempMinMax">--/--°</span>
+                                </div>
+                                <div class="extra-item">
+                                    <span class="extra-icon">🔽</span>
+                                    <span class="extra-label">Pressure</span>
+                                    <span class="extra-value" id="pressure">-- hPa</span>
                                 </div>
                             </div>
                         </div>
@@ -117,6 +193,22 @@
                     <div class="weather-time">
                         <span class="current-time" id="currentTime">12:00</span>
                         <span class="current-date" id="currentDate">Monday, Jan 1</span>
+                        <span class="weather-updated" id="weatherUpdated">Updated just now</span>
+                    </div>
+                    <!-- Weather source badge -->
+                    <div class="weather-source" id="weatherSource">
+                        <span class="source-dot live"></span>
+                        <span>Live Data</span>
+                    </div>
+                </div>
+
+                <!-- 5-Day Forecast -->
+                <div class="forecast-container card-glass animate-in" style="--delay: 0.05s">
+                    <div class="card-header">
+                        <h3>5-Day Forecast</h3>
+                    </div>
+                    <div class="forecast-list" id="forecastList">
+                        <!-- Populated by JS -->
                     </div>
                 </div>
 
@@ -217,6 +309,29 @@
                             <button class="preset-btn" data-minutes="15">15m</button>
                             <button class="preset-btn" data-minutes="5">5m</button>
                             <button class="preset-btn" data-minutes="45">45m</button>
+                            <button class="preset-btn" data-minutes="60">60m</button>
+                            <button class="preset-btn custom-preset" id="customTimerBtn">⚙️</button>
+                        </div>
+                        <!-- Custom Timer Input -->
+                        <div class="custom-timer-container hidden" id="customTimerContainer">
+                            <div class="custom-timer-input-group">
+                                <label>Set custom duration:</label>
+                                <div class="custom-timer-inputs">
+                                    <div class="time-input-wrapper">
+                                        <input type="number" id="customHours" min="0" max="23" value="0" placeholder="0">
+                                        <span>hrs</span>
+                                    </div>
+                                    <div class="time-input-wrapper">
+                                        <input type="number" id="customMinutes" min="0" max="59" value="25" placeholder="25">
+                                        <span>min</span>
+                                    </div>
+                                    <div class="time-input-wrapper">
+                                        <input type="number" id="customSeconds" min="0" max="59" value="0" placeholder="0">
+                                        <span>sec</span>
+                                    </div>
+                                </div>
+                                <button class="set-custom-btn" id="setCustomTimer">Set Timer</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -470,15 +585,67 @@
                         </div>
                     </div>
                     <div class="setting-item">
-                        <label>Notifications</label>
+                        <label>Auto-refresh Weather</label>
                         <div class="toggle-group">
-                            <button class="toggle-btn active" data-notif="on">On</button>
-                            <button class="toggle-btn" data-notif="off">Off</button>
+                            <button class="toggle-btn active" data-refresh="on">On</button>
+                            <button class="toggle-btn" data-refresh="off">Off</button>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label>Weather API Key (OpenWeatherMap)</label>
+                        <div class="api-key-input">
+                            <input type="password" id="apiKeyInput" placeholder="Enter your API key..." value="">
+                            <button class="toggle-visibility" id="toggleApiKey">👁</button>
+                        </div>
+                        <p class="setting-hint">
+                            Get free API key at <a href="https://openweathermap.org/api" target="_blank">openweathermap.org</a>
+                        </p>
+                    </div>
+                    <div class="setting-item">
+                        <label>Current Location</label>
+                        <div class="location-display">
+                            <span id="settingsLocationText">Not set</span>
+                            <button class="change-btn" id="settingsChangeLocation">Change</button>
                         </div>
                     </div>
                     <div class="setting-item">
                         <label>Clear All Data</label>
                         <button class="danger-btn" id="clearData">Reset Everything</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Change Location Modal -->
+        <div class="modal-overlay hidden" id="changeLocationModal">
+            <div class="modal card-glass">
+                <div class="modal-header">
+                    <h2>📍 Change Location</h2>
+                    <button class="modal-close" id="closeChangeLocation">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="location-options">
+                        <button class="location-option-btn" id="useGPSLocation">
+                            <span class="option-icon">📡</span>
+                            <div class="option-text">
+                                <strong>Use GPS</strong>
+                                <span>Auto-detect my current location</span>
+                            </div>
+                        </button>
+                        <div class="option-divider">or</div>
+                        <div class="search-location-form">
+                            <div class="location-search-box">
+                                <input type="text" id="changeLocationInput" placeholder="Search city (e.g., New Delhi, Mumbai)..." autocomplete="off">
+                                <button class="search-btn" id="changeSearchBtn">🔍</button>
+                            </div>
+                            <div class="location-search-results" id="changeLocationResults"></div>
+                        </div>
+                    </div>
+                    <div class="saved-locations" id="savedLocations">
+                        <h4>Recent Locations</h4>
+                        <div class="saved-locations-list" id="savedLocationsList">
+                            <!-- Populated by JS -->
+                        </div>
                     </div>
                 </div>
             </div>

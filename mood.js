@@ -206,7 +206,6 @@ class MoodTracker {
     getRecommendations(weather) {
         const todayMood = this.getTodayMood();
         const streak = this.getStreak();
-        const avg = this.getAverageMood();
         const recs = [];
 
         if (!todayMood) {
@@ -284,12 +283,13 @@ class MoodTracker {
 
         ctx.clearRect(0, 0, width, height);
 
-        // Grid lines
+        // Get theme colors
         const style = getComputedStyle(document.documentElement);
         const gridColor = style.getPropertyValue('--glass-border').trim() || 'rgba(255,255,255,0.08)';
         const textColor = style.getPropertyValue('--text-tertiary').trim() || '#6b7280';
         const accentStr = style.getPropertyValue('--accent').trim() || '#f59e0b';
 
+        // Grid lines
         ctx.strokeStyle = gridColor;
         ctx.lineWidth = 0.5;
 
@@ -306,7 +306,7 @@ class MoodTracker {
             ctx.fillText(i.toString(), padding.left - 8, y + 4);
         }
 
-        // Points and line
+        // Points
         const points = data.map((d, i) => ({
             x: padding.left + (i / (data.length - 1)) * chartW,
             y: padding.top + chartH - (d.value / 5) * chartH,
@@ -365,13 +365,13 @@ class MoodTracker {
 
             // Inner dot
             ctx.beginPath();
-            ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
+            ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
             ctx.fillStyle = accentStr;
             ctx.fill();
 
             // White center
             ctx.beginPath();
-            ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+            ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
             ctx.fillStyle = '#fff';
             ctx.fill();
 
