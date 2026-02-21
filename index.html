@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="sunny">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherMood — Productivity Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particle Canvas Background -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loader-container">
+            <div class="loader-ring">
+                <div class="loader-ring-inner"></div>
+            </div>
+            <p class="loader-text">Reading the skies...</p>
+            <div class="loader-bar">
+                <div class="loader-bar-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" class="app hidden">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <div class="brand-icon">
+                    <span class="brand-sun">☀</span>
+                </div>
+                <span class="brand-text">WeatherMood</span>
+            </div>
+            <div class="nav-links">
+                <button class="nav-link active" data-section="dashboard">
+                    <span class="nav-icon">◉</span>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-link" data-section="tasks">
+                    <span class="nav-icon">☑</span>
+                    <span>Tasks</span>
+                </button>
+                <button class="nav-link" data-section="mood">
+                    <span class="nav-icon">♡</span>
+                    <span>Mood</span>
+                </button>
+                <button class="nav-link" data-section="insights">
+                    <span class="nav-icon">⟡</span>
+                    <span>Insights</span>
+                </button>
+            </div>
+            <div class="nav-actions">
+                <button id="themeToggle" class="icon-btn" title="Cycle Weather Theme">
+                    <span>🎨</span>
+                </button>
+                <button id="settingsBtn" class="icon-btn" title="Settings">
+                    <span>⚙</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <div class="section-content">
+                <!-- Hero Weather Card -->
+                <div class="weather-hero card-glass animate-in">
+                    <div class="weather-hero-bg">
+                        <div class="weather-orb orb-1"></div>
+                        <div class="weather-orb orb-2"></div>
+                        <div class="weather-orb orb-3"></div>
+                    </div>
+                    <div class="weather-hero-content">
+                        <div class="weather-main">
+                            <div class="weather-icon-large" id="weatherIconLarge">
+                                <span>☀️</span>
+                            </div>
+                            <div class="weather-temp">
+                                <span class="temp-value" id="tempValue">24</span>
+                                <span class="temp-unit">°C</span>
+                            </div>
+                        </div>
+                        <div class="weather-details">
+                            <h2 class="weather-condition" id="weatherCondition">Clear Sky</h2>
+                            <p class="weather-location" id="weatherLocation">
+                                <span class="location-pin">📍</span>
+                                <span id="locationText">Detecting location...</span>
+                            </p>
+                            <div class="weather-meta">
+                                <div class="meta-item">
+                                    <span class="meta-icon">💧</span>
+                                    <span class="meta-label">Humidity</span>
+                                    <span class="meta-value" id="humidity">65%</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-icon">💨</span>
+                                    <span class="meta-label">Wind</span>
+                                    <span class="meta-value" id="windSpeed">12 km/h</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-icon">👁</span>
+                                    <span class="meta-label">Visibility</span>
+                                    <span class="meta-value" id="visibility">10 km</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-icon">🌡</span>
+                                    <span class="meta-label">Feels Like</span>
+                                    <span class="meta-value" id="feelsLike">22°C</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weather-time">
+                        <span class="current-time" id="currentTime">12:00</span>
+                        <span class="current-date" id="currentDate">Monday, Jan 1</span>
+                    </div>
+                </div>
+
+                <!-- Grid Cards -->
+                <div class="dashboard-grid">
+                    <!-- Productivity Score -->
+                    <div class="card-glass card-productivity animate-in" style="--delay: 0.1s">
+                        <div class="card-header">
+                            <h3>Productivity Score</h3>
+                            <span class="card-badge" id="prodTrend">↑ 12%</span>
+                        </div>
+                        <div class="productivity-ring-container">
+                            <svg class="productivity-ring" viewBox="0 0 120 120">
+                                <circle class="ring-bg" cx="60" cy="60" r="52" />
+                                <circle class="ring-fill" id="prodRing" cx="60" cy="60" r="52" 
+                                    stroke-dasharray="326.73" stroke-dashoffset="326.73" />
+                            </svg>
+                            <div class="ring-label">
+                                <span class="ring-value" id="prodScore">0</span>
+                                <span class="ring-unit">%</span>
+                            </div>
+                        </div>
+                        <p class="card-subtitle" id="prodMessage">Loading...</p>
+                    </div>
+
+                    <!-- Suggested Activities -->
+                    <div class="card-glass card-activities animate-in" style="--delay: 0.2s">
+                        <div class="card-header">
+                            <h3>Suggested Activities</h3>
+                            <button class="refresh-btn" id="refreshActivities" title="Refresh">↻</button>
+                        </div>
+                        <div class="activities-list" id="activitiesList">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Quick Mood Check -->
+                    <div class="card-glass card-quick-mood animate-in" style="--delay: 0.3s">
+                        <div class="card-header">
+                            <h3>How are you feeling?</h3>
+                        </div>
+                        <div class="quick-mood-grid">
+                            <button class="mood-btn" data-mood="amazing" data-emoji="🤩">
+                                <span class="mood-emoji">🤩</span>
+                                <span class="mood-label">Amazing</span>
+                            </button>
+                            <button class="mood-btn" data-mood="good" data-emoji="😊">
+                                <span class="mood-emoji">😊</span>
+                                <span class="mood-label">Good</span>
+                            </button>
+                            <button class="mood-btn" data-mood="okay" data-emoji="😐">
+                                <span class="mood-emoji">😐</span>
+                                <span class="mood-label">Okay</span>
+                            </button>
+                            <button class="mood-btn" data-mood="low" data-emoji="😔">
+                                <span class="mood-emoji">😔</span>
+                                <span class="mood-label">Low</span>
+                            </button>
+                            <button class="mood-btn" data-mood="stressed" data-emoji="😤">
+                                <span class="mood-emoji">😤</span>
+                                <span class="mood-label">Stressed</span>
+                            </button>
+                            <button class="mood-btn" data-mood="tired" data-emoji="😴">
+                                <span class="mood-emoji">😴</span>
+                                <span class="mood-label">Tired</span>
+                            </button>
+                        </div>
+                        <div class="mood-response hidden" id="moodResponse">
+                            <p id="moodResponseText"></p>
+                        </div>
+                    </div>
+
+                    <!-- Focus Timer -->
+                    <div class="card-glass card-timer animate-in" style="--delay: 0.4s">
+                        <div class="card-header">
+                            <h3>Focus Timer</h3>
+                            <span class="card-badge" id="timerSessionCount">0 sessions</span>
+                        </div>
+                        <div class="timer-display">
+                            <svg class="timer-svg" viewBox="0 0 200 200">
+                                <circle class="timer-track" cx="100" cy="100" r="88" />
+                                <circle class="timer-progress" id="timerProgress" cx="100" cy="100" r="88"
+                                    stroke-dasharray="553.0" stroke-dashoffset="0" />
+                            </svg>
+                            <div class="timer-text">
+                                <span class="timer-minutes" id="timerMinutes">25</span>
+                                <span class="timer-separator">:</span>
+                                <span class="timer-seconds" id="timerSeconds">00</span>
+                            </div>
+                        </div>
+                        <div class="timer-controls">
+                            <button class="timer-btn timer-btn-secondary" id="timerReset">Reset</button>
+                            <button class="timer-btn timer-btn-primary" id="timerToggle">Start</button>
+                            <button class="timer-btn timer-btn-secondary" id="timerSkip">Skip</button>
+                        </div>
+                        <div class="timer-presets">
+                            <button class="preset-btn active" data-minutes="25">25m</button>
+                            <button class="preset-btn" data-minutes="15">15m</button>
+                            <button class="preset-btn" data-minutes="5">5m</button>
+                            <button class="preset-btn" data-minutes="45">45m</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tasks Section -->
+        <section id="tasks" class="section">
+            <div class="section-content">
+                <div class="section-header animate-in">
+                    <div>
+                        <h1>Task Manager</h1>
+                        <p class="section-subtitle">Weather-optimized task scheduling</p>
+                    </div>
+                    <div class="task-stats">
+                        <div class="stat-pill">
+                            <span class="stat-dot done"></span>
+                            <span id="completedCount">0</span> Done
+                        </div>
+                        <div class="stat-pill">
+                            <span class="stat-dot pending"></span>
+                            <span id="pendingCount">0</span> Pending
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Task -->
+                <div class="add-task-container card-glass animate-in" style="--delay: 0.1s">
+                    <form id="addTaskForm" class="add-task-form">
+                        <div class="input-group">
+                            <input type="text" id="taskInput" placeholder="What needs to be done?" 
+                                class="task-input" required autocomplete="off">
+                            <div class="input-line"></div>
+                        </div>
+                        <div class="task-options">
+                            <select id="taskPriority" class="task-select">
+                                <option value="low">🟢 Low</option>
+                                <option value="medium" selected>🟡 Medium</option>
+                                <option value="high">🔴 High</option>
+                            </select>
+                            <select id="taskCategory" class="task-select">
+                                <option value="work">💼 Work</option>
+                                <option value="personal">🏠 Personal</option>
+                                <option value="health">💪 Health</option>
+                                <option value="learning">📚 Learning</option>
+                                <option value="outdoor">🌳 Outdoor</option>
+                            </select>
+                            <button type="submit" class="add-task-btn">
+                                <span>+</span> Add Task
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Task Filters -->
+                <div class="task-filters animate-in" style="--delay: 0.15s">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="active">Active</button>
+                    <button class="filter-btn" data-filter="completed">Completed</button>
+                    <button class="filter-btn" data-filter="outdoor">🌳 Outdoor</button>
+                    <button class="filter-btn" data-filter="high">🔴 Priority</button>
+                </div>
+
+                <!-- Task List -->
+                <div class="task-list" id="taskList">
+                    <div class="empty-state" id="emptyTasks">
+                        <div class="empty-icon">📋</div>
+                        <h3>No tasks yet</h3>
+                        <p>Add your first task to get started!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mood Section -->
+        <section id="mood" class="section">
+            <div class="section-content">
+                <div class="section-header animate-in">
+                    <div>
+                        <h1>Mood Tracker</h1>
+                        <p class="section-subtitle">Understanding your emotional patterns</p>
+                    </div>
+                </div>
+
+                <!-- Mood Calendar Heatmap -->
+                <div class="card-glass mood-heatmap-card animate-in" style="--delay: 0.1s">
+                    <div class="card-header">
+                        <h3>Mood History (Last 30 Days)</h3>
+                    </div>
+                    <div class="mood-heatmap" id="moodHeatmap">
+                        <!-- Generated by JS -->
+                    </div>
+                    <div class="heatmap-legend">
+                        <span>Low</span>
+                        <div class="legend-colors">
+                            <div class="legend-color" style="--level: 1"></div>
+                            <div class="legend-color" style="--level: 2"></div>
+                            <div class="legend-color" style="--level: 3"></div>
+                            <div class="legend-color" style="--level: 4"></div>
+                            <div class="legend-color" style="--level: 5"></div>
+                        </div>
+                        <span>High</span>
+                    </div>
+                </div>
+
+                <!-- Mood Chart -->
+                <div class="card-glass mood-chart-card animate-in" style="--delay: 0.2s">
+                    <div class="card-header">
+                        <h3>Weekly Mood Trend</h3>
+                    </div>
+                    <div class="mood-chart-container">
+                        <canvas id="moodChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Mood Journal -->
+                <div class="card-glass mood-journal-card animate-in" style="--delay: 0.3s">
+                    <div class="card-header">
+                        <h3>Journal Entry</h3>
+                        <span class="card-badge" id="journalDate">Today</span>
+                    </div>
+                    <textarea id="journalEntry" class="journal-textarea" 
+                        placeholder="How was your day? What influenced your mood?"></textarea>
+                    <div class="journal-actions">
+                        <div class="journal-tags">
+                            <button class="tag-btn" data-tag="grateful">🙏 Grateful</button>
+                            <button class="tag-btn" data-tag="productive">⚡ Productive</button>
+                            <button class="tag-btn" data-tag="social">👥 Social</button>
+                            <button class="tag-btn" data-tag="creative">🎨 Creative</button>
+                            <button class="tag-btn" data-tag="exercise">🏃 Exercise</button>
+                        </div>
+                        <button class="save-journal-btn" id="saveJournal">Save Entry</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Insights Section -->
+        <section id="insights" class="section">
+            <div class="section-content">
+                <div class="section-header animate-in">
+                    <div>
+                        <h1>Insights</h1>
+                        <p class="section-subtitle">Data-driven wellness insights</p>
+                    </div>
+                </div>
+
+                <div class="insights-grid">
+                    <!-- Weather Impact -->
+                    <div class="card-glass insight-card animate-in" style="--delay: 0.1s">
+                        <div class="insight-icon">🌤️</div>
+                        <h3>Weather Impact</h3>
+                        <p class="insight-value" id="weatherImpact">+15%</p>
+                        <p class="insight-desc">Your productivity increases on sunny days</p>
+                        <div class="insight-bar">
+                            <div class="insight-bar-fill" style="--width: 75%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Best Time -->
+                    <div class="card-glass insight-card animate-in" style="--delay: 0.2s">
+                        <div class="insight-icon">⏰</div>
+                        <h3>Peak Hours</h3>
+                        <p class="insight-value" id="peakHours">9AM - 11AM</p>
+                        <p class="insight-desc">Your most productive time window</p>
+                        <div class="insight-bar">
+                            <div class="insight-bar-fill" style="--width: 85%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Streak -->
+                    <div class="card-glass insight-card animate-in" style="--delay: 0.3s">
+                        <div class="insight-icon">🔥</div>
+                        <h3>Current Streak</h3>
+                        <p class="insight-value" id="streakDays">7 days</p>
+                        <p class="insight-desc">Consecutive days of mood tracking</p>
+                        <div class="insight-bar">
+                            <div class="insight-bar-fill" style="--width: 60%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Tasks Completed -->
+                    <div class="card-glass insight-card animate-in" style="--delay: 0.4s">
+                        <div class="insight-icon">✅</div>
+                        <h3>Task Completion</h3>
+                        <p class="insight-value" id="taskCompletionRate">82%</p>
+                        <p class="insight-desc">Average daily completion rate</p>
+                        <div class="insight-bar">
+                            <div class="insight-bar-fill" style="--width: 82%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Mood Average -->
+                    <div class="card-glass insight-card animate-in" style="--delay: 0.5s">
+                        <div class="insight-icon">😊</div>
+                        <h3>Mood Average</h3>
+                        <p class="insight-value" id="moodAverage">Good</p>
+                        <p class="insight-desc">Your average mood this week</p>
+                        <div class="insight-bar">
+                            <div class="insight-bar-fill" style="--width: 70%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Focus Time -->
+                    <div class="card-glass insight-card animate-in" style="--delay: 0.6s">
+                        <div class="insight-icon">🧠</div>
+                        <h3>Focus Time</h3>
+                        <p class="insight-value" id="totalFocus">3h 25m</p>
+                        <p class="insight-desc">Total focused time today</p>
+                        <div class="insight-bar">
+                            <div class="insight-bar-fill" style="--width: 55%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendations -->
+                <div class="card-glass recommendations-card animate-in" style="--delay: 0.7s">
+                    <div class="card-header">
+                        <h3>🤖 AI Recommendations</h3>
+                    </div>
+                    <div class="recommendations-list" id="recommendationsList">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Toast Notifications -->
+        <div class="toast-container" id="toastContainer"></div>
+
+        <!-- Settings Modal -->
+        <div class="modal-overlay hidden" id="settingsModal">
+            <div class="modal card-glass">
+                <div class="modal-header">
+                    <h2>Settings</h2>
+                    <button class="modal-close" id="closeSettings">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="setting-item">
+                        <label>Temperature Unit</label>
+                        <div class="toggle-group">
+                            <button class="toggle-btn active" data-unit="celsius">°C</button>
+                            <button class="toggle-btn" data-unit="fahrenheit">°F</button>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label>Focus Timer Sound</label>
+                        <div class="toggle-group">
+                            <button class="toggle-btn active" data-sound="on">On</button>
+                            <button class="toggle-btn" data-sound="off">Off</button>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label>Notifications</label>
+                        <div class="toggle-group">
+                            <button class="toggle-btn active" data-notif="on">On</button>
+                            <button class="toggle-btn" data-notif="off">Off</button>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label>Clear All Data</label>
+                        <button class="danger-btn" id="clearData">Reset Everything</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/particles.js"></script>
+    <script src="js/weather.js"></script>
+    <script src="js/mood.js"></script>
+    <script src="js/tasks.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

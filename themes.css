@@ -1,0 +1,108 @@
+/* ===== SUNNY THEME (Default) ===== */
+[data-theme="sunny"] {
+    --bg-primary: #0f1117;
+    --bg-secondary: #1a1c25;
+    --text-primary: #f0f0f5;
+    --text-secondary: #9ca3af;
+    --text-tertiary: #6b7280;
+    --accent: #f59e0b;
+    --accent-rgb: 245, 158, 11;
+    --accent-secondary: #f97316;
+    --accent-tertiary: #fbbf24;
+    --card-bg: rgba(26, 28, 37, 0.8);
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-border-hover: rgba(255, 255, 255, 0.15);
+    --glass-hover: rgba(255, 255, 255, 0.08);
+    --nav-bg: rgba(15, 17, 23, 0.85);
+    --particle-color: rgba(245, 158, 11, 0.3);
+}
+
+/* ===== CLOUDY THEME ===== */
+[data-theme="cloudy"] {
+    --bg-primary: #111318;
+    --bg-secondary: #1e2028;
+    --text-primary: #e5e7eb;
+    --text-secondary: #9ca3af;
+    --text-tertiary: #6b7280;
+    --accent: #60a5fa;
+    --accent-rgb: 96, 165, 250;
+    --accent-secondary: #818cf8;
+    --accent-tertiary: #93c5fd;
+    --card-bg: rgba(30, 32, 40, 0.8);
+    --glass-bg: rgba(255, 255, 255, 0.04);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-border-hover: rgba(255, 255, 255, 0.12);
+    --glass-hover: rgba(255, 255, 255, 0.06);
+    --nav-bg: rgba(17, 19, 24, 0.85);
+    --particle-color: rgba(96, 165, 250, 0.2);
+}
+
+/* ===== RAINY THEME ===== */
+[data-theme="rainy"] {
+    --bg-primary: #0a0d14;
+    --bg-secondary: #141821;
+    --text-primary: #d1d5db;
+    --text-secondary: #8892a4;
+    --text-tertiary: #5b6477;
+    --accent: #6366f1;
+    --accent-rgb: 99, 102, 241;
+    --accent-secondary: #8b5cf6;
+    --accent-tertiary: #a78bfa;
+    --card-bg: rgba(20, 24, 33, 0.85);
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.05);
+    --glass-border-hover: rgba(255, 255, 255, 0.1);
+    --glass-hover: rgba(255, 255, 255, 0.05);
+    --nav-bg: rgba(10, 13, 20, 0.9);
+    --particle-color: rgba(99, 102, 241, 0.25);
+}
+
+/* ===== STORMY THEME ===== */
+[data-theme="stormy"] {
+    --bg-primary: #07090e;
+    --bg-secondary: #0f1219;
+    --text-primary: #c8cdd5;
+    --text-secondary: #7c8594;
+    --text-tertiary: #4f5869;
+    --accent: #a855f7;
+    --accent-rgb: 168, 85, 247;
+    --accent-secondary: #ec4899;
+    --accent-tertiary: #c084fc;
+    --card-bg: rgba(15, 18, 25, 0.85);
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.04);
+    --glass-border-hover: rgba(255, 255, 255, 0.08);
+    --glass-hover: rgba(255, 255, 255, 0.04);
+    --nav-bg: rgba(7, 9, 14, 0.9);
+    --particle-color: rgba(168, 85, 247, 0.2);
+}
+
+/* ===== SNOWY THEME ===== */
+[data-theme="snowy"] {
+    --bg-primary: #0e1420;
+    --bg-secondary: #1a2235;
+    --text-primary: #e8edf5;
+    --text-secondary: #94a3b8;
+    --text-tertiary: #64748b;
+    --accent: #38bdf8;
+    --accent-rgb: 56, 189, 248;
+    --accent-secondary: #22d3ee;
+    --accent-tertiary: #7dd3fc;
+    --card-bg: rgba(26, 34, 53, 0.8);
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-border-hover: rgba(255, 255, 255, 0.15);
+    --glass-hover: rgba(255, 255, 255, 0.07);
+    --nav-bg: rgba(14, 20, 32, 0.85);
+    --particle-color: rgba(56, 189, 248, 0.3);
+}
+
+/* ===== THEME TRANSITION ===== */
+[data-theme] * {
+    transition: 
+        background-color 0.5s ease,
+        border-color 0.5s ease,
+        color 0.3s ease,
+        box-shadow 0.3s ease;
+}
